@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>body{margin:0;background:#111}video{width:100%;display:block}</style></head>
+<body>
+<video id="v" src="uploads/0607 (2).mp4" muted playsinline></video>
+<script>
+  const v = document.getElementById('v');
+  window.seekTo = (t) => new Promise(res => { v.onseeked = () => res(v.currentTime); v.currentTime = t; });
+  v.onloadedmetadata = () => { window.__dur = v.duration; };
+</script>
+</body>
+</html>

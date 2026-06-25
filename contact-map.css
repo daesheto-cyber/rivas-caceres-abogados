@@ -1,0 +1,234 @@
+/* =========================================================================
+   Contacto · Mapa interactivo de sedes
+   Panel premium navy con directorio de oficinas gobernado por config.
+   Todo el render lo crea contact-map.js; estos estilos son el envoltorio.
+   ========================================================================= */
+
+.contact__intro { max-width: 60ch; }
+.contact__intro .contact__lead { margin-top: 18px; }
+
+/* --- Contenedor del mapa --------------------------------------------- */
+.cmap {
+  margin-top: clamp(60px, 7vw, 88px);
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  border: 1px solid var(--navy-line);
+  border-radius: calc(var(--radius) * 2.5);
+  overflow: hidden;
+  background: var(--navy-800);
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.7);
+}
+
+/* --- Escenario (iframe Google Maps) ---------------------------------- */
+.cmap__stage {
+  position: relative;
+  min-height: clamp(420px, 52vw, 580px);
+  background: #0f1f1f;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Viñeta de borde sutil sobre el iframe */
+.cmap__stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(174, 187, 203, 0.08);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* --- Loading skeleton ------------------------------------------------ */
+.cmap-loader {
+  position: absolute; inset: 0; z-index: 6;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+  background: #0f1f1f;
+  transition: opacity 0.4s ease;
+}
+.cmap-loader__spin {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(174, 187, 203, 0.12);
+  border-top-color: var(--gold-soft);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cmap-loader__spin { animation: cmapSpin 0.8s linear infinite; }
+}
+@keyframes cmapSpin { to { transform: rotate(360deg); } }
+.cmap-loader__txt {
+  font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--on-navy-mut);
+}
+
+/* --- Toggle mapa / satélite ------------------------------------------ */
+.cmap-toggle {
+  position: absolute; top: 14px; right: 14px; z-index: 8;
+  display: flex;
+  background: rgba(6, 14, 14, 0.72);
+  border: 1px solid var(--navy-line);
+  border-radius: 8px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+.cmap-toggle__btn {
+  padding: 7px 14px;
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--on-navy-mut);
+  background: none; border: none; cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.cmap-toggle__btn + .cmap-toggle__btn {
+  border-left: 1px solid var(--navy-line);
+}
+.cmap-toggle__btn.is-active {
+  color: var(--gold-soft);
+  background: rgba(168, 124, 66, 0.12);
+}
+
+/* --- Badge Google Maps ----------------------------------------------- */
+.cmap__badge {
+  position: absolute; bottom: 14px; left: 14px; z-index: 8;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 13px;
+  background: rgba(6, 14, 14, 0.72);
+  border: 1px solid var(--navy-line);
+  border-radius: 100px;
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--on-navy-soft);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+.cmap__live {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cmap__live { animation: cmapBlink 2.2s ease-in-out infinite; }
+}
+@keyframes cmapBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* --- CTAs inferiores (Abrir en Maps / Cómo llegar) ------------------- */
+.cmap-actions {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.cmap-actions__btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 15px;
+  border-radius: 8px;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  border: 1px solid var(--navy-line);
+  color: var(--on-navy-soft);
+  background: rgba(255,255,255,0.03);
+}
+.cmap-actions__btn:hover {
+  background: rgba(168, 124, 66, 0.08);
+  border-color: rgba(168, 124, 66, 0.4);
+  color: var(--gold-soft);
+}
+.cmap-actions__btn--primary {
+  background: rgba(168, 124, 66, 0.12);
+  border-color: rgba(168, 124, 66, 0.35);
+  color: var(--gold-soft);
+}
+.cmap-actions__btn--primary:hover {
+  background: rgba(168, 124, 66, 0.22);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* --- Panel lateral · directorio de sedes ---------------------------- */
+.cmap__side {
+  background: var(--navy-900);
+  border-left: 1px solid var(--navy-line);
+  padding: clamp(22px, 2.4vw, 30px);
+  display: flex; flex-direction: column;
+  min-width: 0;
+}
+.cmap__side-head .eyebrow { color: var(--gold-soft); }
+.cmap__side-title {
+  font-family: var(--serif); font-size: 1.45rem; color: #fff;
+  margin-top: 10px; letter-spacing: -0.01em;
+}
+.cmap__count {
+  font-size: 0.8rem; color: var(--on-navy-mut); margin-top: 6px;
+}
+.cmap__count b { color: var(--gold-soft); }
+
+.cmap__list {
+  margin-top: 18px;
+  display: flex; flex-direction: column; gap: 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+.cmap-card {
+  text-align: left; width: 100%;
+  display: grid; grid-template-columns: auto 1fr; gap: 13px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--navy-line);
+  border-radius: 10px;
+  transition: border-color 0.16s, background 0.16s, transform 0.16s;
+}
+.cmap-card:hover { border-color: rgba(168, 124, 66, 0.5); background: rgba(168, 124, 66, 0.05); }
+.cmap-card.is-active { border-color: var(--gold); background: rgba(168, 124, 66, 0.1); }
+.cmap-card__marker {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(168, 124, 66, 0.14);
+  color: var(--gold-soft);
+  font-family: var(--serif); font-size: 0.85rem; font-variant-numeric: tabular-nums;
+  align-self: start; margin-top: 2px;
+}
+.cmap-card.is-active .cmap-card__marker { background: var(--gold); color: #fff; }
+.cmap-card__body { min-width: 0; }
+.cmap-card__name, .cmap-card__city, .cmap-card__addr, .cmap-card__note { display: block; }
+.cmap-card__name { font-family: var(--serif); font-size: 1.05rem; color: #fff; line-height: 1.2; }
+.cmap-card__city {
+  font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--gold-soft); margin-top: 4px;
+}
+.cmap-card__addr { font-size: 0.86rem; color: var(--on-navy-soft); line-height: 1.5; margin-top: 8px; white-space: pre-line; }
+.cmap-card__note { font-size: 0.8rem; color: var(--on-navy-mut); line-height: 1.45; margin-top: 6px; }
+.cmap-card__status {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 10px;
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.cmap-card__status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
+.cmap-card__status.pending { color: var(--on-navy-mut); }
+.cmap-card__status.pending::before { background: var(--on-navy-mut); box-shadow: 0 0 0 2px rgba(126,142,163,0.18); }
+.cmap-card__status.active { color: var(--gold-soft); }
+.cmap-card__status.active::before { background: var(--gold); box-shadow: 0 0 0 2px var(--gold-tint); }
+
+.cmap__note {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid var(--navy-line);
+  font-size: 0.78rem; color: var(--on-navy-mut); line-height: 1.5;
+}
+.cmap__note b { color: var(--on-navy-soft); font-weight: 600; }
+
+/* --- Columna de info bajo el formulario ----------------------------- */
+.contact__detailgrid { display: grid; gap: 0; }
+.contact__detail {
+  padding: 18px 0; border-top: 1px solid var(--navy-line);
+  display: grid; grid-template-columns: 130px 1fr; gap: 18px; align-items: baseline;
+}
+.contact__detail:first-child { border-top: none; padding-top: 0; }
+.contact__detail dt {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--on-navy-mut);
+}
+.contact__detail dd { color: var(--on-navy); font-size: 0.95rem; line-height: 1.6; }
+.contact__detail dd a { color: var(--gold-soft); }
+.contact__detail dd .muted { color: var(--on-navy-mut); font-size: 0.85rem; }
+
+/* --- Responsive ------------------------------------------------------ */
+@media (max-width: 860px) {
+  .cmap { grid-template-columns: 1fr; }
+  .cmap__stage { min-height: clamp(300px, 60vw, 420px); }
+  .cmap__side { border-left: none; border-top: 1px solid var(--navy-line); }
+  .cmap__list { max-height: 320px; }
+}
+@media (max-width: 720px) {
+  .contact__detail { grid-template-columns: 1fr; gap: 4px; }
+}

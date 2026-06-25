@@ -1,0 +1,114 @@
+/* =========================================================================
+   Artículos & Insights · Modal de lectura
+   Mismo patrón visual que careers.css. Solo estilos del modal.
+   ========================================================================= */
+
+.art-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(16px, 5vh, 64px) 16px;
+  overflow-y: auto;
+}
+.art-modal.is-open { display: flex; }
+
+.art-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 14, 14, 0.62);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  opacity: 0;
+  transition: opacity 0.28s var(--ease);
+}
+.art-modal.is-open .art-modal__backdrop { opacity: 1; }
+
+.art-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  margin: auto;
+  background: var(--paper-2, #faf8f3);
+  border: 1px solid var(--line, #e2ded4);
+  border-radius: calc(var(--radius, 4px) * 3);
+  box-shadow: 0 40px 100px -30px rgba(6, 14, 14, 0.55);
+  overflow: hidden;
+  transform: translateY(16px) scale(0.985);
+  opacity: 0;
+  transition: transform 0.32s var(--ease), opacity 0.32s var(--ease);
+  outline: none;
+}
+.art-modal.is-open .art-modal__dialog { transform: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .art-modal__dialog, .art-modal__backdrop { transition: none; }
+}
+
+/* Cabecera */
+.art-modal__head {
+  position: relative;
+  padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 48px) clamp(20px, 2.5vw, 28px);
+  background:
+    radial-gradient(120% 130% at 100% 0%, rgba(168, 124, 66, 0.09), transparent 55%),
+    linear-gradient(180deg, #fff, var(--paper-2, #faf8f3));
+  border-bottom: 1px solid var(--line, #e2ded4);
+}
+.art-modal__meta {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 14px;
+}
+.art-modal__cat {
+  display: inline-block;
+  background: var(--navy-700, #1D4141); color: #fff;
+  font-size: 0.63rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: var(--radius, 4px);
+}
+.art-modal__date {
+  font-size: 0.76rem; letter-spacing: 0.06em; color: var(--ink-mut, #687470);
+}
+.art-modal__title {
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  font-weight: 500; color: var(--ink, #1a201e);
+  line-height: 1.15; letter-spacing: -0.01em;
+}
+
+/* Botón cerrar */
+.art-modal__close {
+  position: absolute; top: 18px; right: 18px;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ink-soft, #465450);
+  background: rgba(20, 36, 32, 0.05);
+  transition: background 0.16s, color 0.16s, transform 0.16s;
+}
+.art-modal__close:hover {
+  background: rgba(20, 36, 32, 0.11); color: var(--ink, #1a201e); transform: rotate(90deg);
+}
+.art-modal__close svg { width: 18px; height: 18px; }
+
+/* Cuerpo del artículo */
+.art-modal__body {
+  padding: clamp(24px, 3.5vw, 40px) clamp(24px, 4vw, 48px) clamp(32px, 4.5vw, 52px);
+  max-height: 55vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.art-modal__body p {
+  font-size: clamp(0.96rem, 1.2vw, 1.04rem);
+  color: var(--ink-soft, #465450);
+  line-height: 1.78;
+  margin-bottom: 1.2em;
+}
+.art-modal__body p:last-child { margin-bottom: 0; }
+.art-modal__body p b { color: var(--ink, #1a201e); font-weight: 600; }
+/* Párrafos que empiezan con <b> actúan como subtítulos */
+.art-modal__body p:has(b:only-child) {
+  margin-top: 1.5em;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  color: var(--navy-700, #1D4141);
+}
+
+@media print { .art-modal { display: none !important; } }
