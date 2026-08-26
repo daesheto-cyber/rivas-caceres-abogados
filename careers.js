@@ -110,13 +110,29 @@
     });
   }
 
-  /* ---------- envío (demo) ---------- */
+  /* ---------- envío real vía webhook (Make.com) ---------- */
+  var WEBHOOK_URL = 'https://hook.us2.make.com/akj9apjxvimbkfx3iw2i97igeazajt4o';
+  var submitBtn = form ? form.querySelector('[type="submit"]') : null;
+
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault();
-    // validación nativa de los campos requeridos
     if (!form.checkValidity()) { form.reportValidity(); return; }
-    // (Aquí conectarías el envío real a tu backend / correo.)
-    modal.classList.add('is-sent');
+
+    var fd = new FormData(form);
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.label = submitBtn.textContent; submitBtn.textContent = 'Enviando…'; }
+    errEl.textContent = '';
+
+    fetch(WEBHOOK_URL, { method: 'POST', body: fd })
+      .then(function (res) {
+        if (!res.ok) throw new Error('bad status');
+        modal.classList.add('is-sent');
+      })
+      .catch(function () {
+        errEl.textContent = 'No se pudo enviar la candidatura. Intenta de nuevo.';
+      })
+      .finally(function () {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.label; }
+      });
   });
 
   // Reabrir limpio tras enviar

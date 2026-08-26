@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Integración WhatsApp Cloud API · Rivas &amp; Asociados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{
+--ink:#141d1d;--ink-soft:#3d4a4a;--ink-mut:#6b7878;
+--green:#0F2424;--green-700:#1D4141;--green-line:#d4dcda;
+--gold:#A87C42;--gold-soft:#B08D4F;--gold-tint:#f6f0e6;
+--serif:'Spectral',Georgia,serif;
+--sans:'Hanken Grotesk',system-ui,sans-serif;
+}
+doc-page{font-family:var(--sans);color:var(--ink);font-size:10.5pt;line-height:1.62}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em;color:var(--green)}
+
+/* --- portada --- */
+.cover{border-bottom:2px solid var(--green);padding-bottom:28px;margin-bottom:36px}
+.cover .brand{font-family:var(--serif);font-size:13pt;color:var(--green);letter-spacing:0.01em}
+.cover .brand .amp{color:var(--gold);font-style:italic}
+.cover .kicker{font-size:7.5pt;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-top:22px}
+.cover h1{font-size:30pt;line-height:1.04;margin:10px 0 0}
+.cover h1 em{font-style:italic;color:var(--gold-soft)}
+.cover .sub{font-size:11pt;color:var(--ink-soft);max-width:52ch;margin-top:16px;line-height:1.55}
+.cover .meta{display:flex;gap:32px;flex-wrap:wrap;margin-top:24px;font-size:8pt;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-mut)}
+
+/* --- aviso previo --- */
+.alert{border:1px solid var(--gold);background:var(--gold-tint);padding:20px 24px;margin:0 0 34px;break-inside:avoid}
+.alert h4{font-family:var(--sans);font-size:9pt;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+.alert p{margin:0 0 8px}
+.alert p:last-child{margin-bottom:0}
+
+/* --- fases --- */
+.phase{margin-top:38px;break-inside:auto}
+.phase__head{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--green-line);padding-bottom:10px;margin-bottom:18px;break-after:avoid}
+.phase__n{font-family:var(--serif);font-size:22pt;line-height:1;color:var(--gold);flex:none;width:44px}
+.phase__head h2{font-size:16pt;margin:0;line-height:1.15}
+.phase__head .time{margin-left:auto;font-size:7.5pt;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-mut);flex:none;white-space:nowrap}
+
+/* --- pasos --- */
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:0}
+ol.steps>li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:16px;break-inside:avoid}
+ol.steps>li::before{content:counter(s);position:absolute;left:0;top:1px;width:21px;height:21px;border:1px solid var(--gold);border-radius:50%;color:var(--gold);font-size:8pt;font-weight:700;display:grid;place-items:center;font-family:var(--sans)}
+ol.steps>li b{color:var(--green);font-weight:700}
+
+.path{font-family:var(--sans);font-size:9pt;font-weight:600;background:#eef2f1;border:1px solid var(--green-line);padding:1px 7px;border-radius:3px;color:var(--green-700);white-space:nowrap}
+code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:8.8pt;background:#eef2f1;padding:1px 6px;border-radius:3px;color:var(--green-700);word-break:normal;overflow-wrap:anywhere}
+
+/* --- callouts --- */
+.note{border-left:2px solid var(--gold);padding:2px 0 2px 16px;margin:14px 0 14px 34px;font-size:9.6pt;color:var(--ink-soft);break-inside:avoid}
+.note b{color:var(--green)}
+.warn{border-left:2px solid #b4472f;padding:2px 0 2px 16px;margin:14px 0 14px 34px;font-size:9.6pt;color:var(--ink-soft);break-inside:avoid}
+.warn b{color:#b4472f}
+
+/* --- guardar dato --- */
+.vault{border:1px dashed var(--gold);background:#fdfbf7;padding:16px 20px;margin:16px 0 16px 34px;break-inside:avoid}
+.vault h5{font-family:var(--sans);font-size:8pt;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+.vault dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:9.4pt}
+.vault dt{font-weight:600;color:var(--green)}
+.vault dd{margin:0;color:var(--ink-mut);border-bottom:1px dotted #c9d2d0}
+
+/* --- tablas --- */
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:9.2pt}
+thead th{text-align:left;font-family:var(--sans);font-size:7.5pt;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border-bottom:1.5px solid var(--green);padding:0 12px 8px 0}
+tbody td{padding:9px 12px 9px 0;border-bottom:1px solid var(--green-line);vertical-align:top}
+tbody tr{break-inside:avoid}
+tbody td:first-child{font-weight:600;color:var(--green);white-space:nowrap}
+
+/* --- plantilla --- */
+.tpl{border:1px solid var(--green-line);margin:16px 0;break-inside:avoid}
+.tpl__bar{background:var(--green);color:#fff;padding:9px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tpl__bar b{font-family:var(--sans);font-size:9pt;font-weight:600;letter-spacing:0.02em}
+.tpl__cat{font-size:7pt;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--green);background:var(--gold-soft);padding:2px 8px;border-radius:2px}
+.tpl__body{padding:16px}
+.bubble{background:#e7f3ea;border-radius:8px 8px 8px 2px;padding:12px 15px;font-size:9.8pt;line-height:1.55;color:#12211a;max-width:42em}
+.bubble .v{background:#fdf0d8;border-bottom:1px solid var(--gold);padding:0 2px;font-weight:600}
+.bubble .foot{display:block;margin-top:9px;font-size:8.2pt;color:#5d6b62}
+.tpl__vars{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin-top:14px;font-size:9pt;padding-top:12px;border-top:1px solid var(--green-line)}
+.tpl__vars dt{font-weight:700;color:var(--gold)}
+.tpl__vars dd{margin:0;color:var(--ink-soft)}
+
+/* --- checklist --- */
+ul.check{list-style:none;padding:0;margin:14px 0}
+ul.check li{position:relative;padding-left:26px;margin-bottom:9px;break-inside:avoid}
+ul.check li::before{content:"";position:absolute;left:0;top:3px;width:12px;height:12px;border:1.5px solid var(--gold)}
+
+h3{font-size:11.5pt;margin:26px 0 10px;break-after:avoid}
+p{margin:0 0 11px}
+.lead{font-size:11pt;color:var(--ink-soft);margin-bottom:20px}
+a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(168,124,66,.4)}
+a:hover{color:var(--green)}
+[slot="footer"]{display:flex;justify-content:space-between;font-size:7.5pt;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-mut);border-top:1px solid var(--green-line);padding-top:8px}
+</style>
+</head>
+<body>
+<doc-page margin="0.85in">
+
+<div slot="footer"><span>Rivas &amp; Asociados · Integración WhatsApp Cloud API</span><span>Documento interno</span></div>
+
+<header class="cover">
+<div class="brand">Rivas <span class="amp">&amp;</span> Asociados</div>
+<div class="kicker">Documento técnico · Guía de implementación</div>
+<h1>WhatsApp Cloud API <em>de cero a producción</em></h1>
+<p class="sub">Paso a paso completo para conectar el número de WhatsApp de la firma a los formularios de la web, usando Make.com como intermediario seguro. Sin escribir código.</p>
+<div class="meta"><span>11 fases</span><span>~3 h de trabajo activo</span><span>+ 1–3 días de revisiones de Meta</span></div>
+</header>
+
+<div class="alert">
+<h4>Lea esto antes de empezar</h4>
+<p><b>La Cloud API sirve para que tu número envíe mensajes automáticos</b> — confirmar que recibiste una consulta, recordar una cita, avisar a un abogado. No sirve para que el visitante te escriba: para eso el botón flotante <code>wa.me</code> que ya tiene la web es la herramienta correcta, y no hay que cambiarlo.</p>
+<p><b>Nunca se llama desde la página web.</b> La API exige un token secreto; si va en el HTML, cualquiera lo ve en el código fuente y puede enviar mensajes con tu número. Por eso todo pasa por Make.com, que guarda el token de su lado.</p>
+</div>
+
+<!-- ============================================ FASE 0 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">00</span><h2>Reunir lo necesario</h2><span class="time">15 min</span></div>
+<p class="lead">Si falta algo de esta lista te vas a quedar trabado a mitad de camino. Consíguelo todo antes de abrir el navegador.</p>
+
+<ul class="check">
+<li><b>Cuenta personal de Facebook.</b> Es el único acceso a Meta for Developers. No existe registro con correo suelto.</li>
+<li><b>Un número de teléfono sin WhatsApp activo.</b> Es el requisito que más gente frena — ver el aviso abajo.</li>
+<li><b>Nombre legal de la firma</b> tal como aparece en Cámara de Comercio.</li>
+<li><b>Sitio web de la firma</b> — Meta lo pide para verificar que el negocio existe.</li>
+<li><b>Un correo institucional</b> (no Gmail personal si se puede evitar; ayuda en la verificación).</li>
+<li><b>Acceso a la cuenta de Make.com</b> donde ya corren los formularios.</li>
+</ul>
+
+<div class="warn">
+<b>El problema del número.</b> El número que registres <b>no puede tener WhatsApp instalado</b>, ni normal ni Business. Si el número principal de la firma ya tiene WhatsApp y lo registras aquí, pierdes esa cuenta y el historial de conversaciones. La práctica habitual es <b>comprar un chip nuevo dedicado</b> solo a la API. Cuesta poco y evita un desastre irreversible.
+</div>
+
+<div class="note">
+Puede ser un número fijo. Si la firma tiene línea fija en la oficina de la Calle 146, sirve — solo necesita recibir una llamada de verificación una única vez.
+</div>
+</section>
+
+<!-- ============================================ FASE 1 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">01</span><h2>Crear el Portfolio de negocio</h2><span class="time">10 min</span></div>
+<p class="lead">Es el contenedor legal de todo. Va primero porque después no se puede reasignar sin dolor.</p>
+
+<ol class="steps">
+<li>Entra a <a href="https://business.facebook.com">business.facebook.com</a> con tu cuenta de Facebook.</li>
+<li>Si nunca has creado uno: <span class="path">Crear cuenta</span>. Si ya tienes: menú superior izquierdo → <span class="path">Todas las cuentas comerciales</span> → <span class="path">Crear</span>.</li>
+<li><b>Nombre del negocio:</b> el nombre legal exacto. No pongas «Rivas WhatsApp» ni «Rivas Pruebas» — este nombre lo revisa un humano de Meta y debe coincidir con la firma real.</li>
+<li>Completa tu nombre y el correo institucional. Confirma el correo desde la bandeja.</li>
+<li>Ve a <span class="path">Configuración del negocio</span> → <span class="path">Información del negocio</span> y llena dirección, teléfono y sitio web. Datos incompletos aquí retrasan la aprobación del nombre para mostrar en la fase 06.</li>
+</ol>
+
+<div class="vault">
+<h5>Anota antes de seguir</h5>
+<dl>
+<dt>Business Portfolio ID</dt><dd></dd>
+<dt>Correo administrador</dt><dd></dd>
+</dl>
+</div>
+</section>
+
+<!-- ============================================ FASE 2 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">02</span><h2>Crear la app de desarrollador</h2><span class="time">5 min</span></div>
+
+<ol class="steps">
+<li>Ve a <a href="https://developers.facebook.com">developers.facebook.com</a> → <span class="path">Mis Apps</span> → <span class="path">Crear app</span>.</li>
+<li>En «¿Qué quieres que haga tu app?» elige <b>Otro</b>. No elijas ninguna de las opciones sugeridas arriba — llevan a flujos que no incluyen WhatsApp.</li>
+<li>Tipo de app: <b>Negocio</b> (Business).</li>
+<li><b>Nombre de la app:</b> algo interno y claro, ej. <code>Rivas Notificaciones</code>. Este nombre no lo ve el cliente, así que aquí sí puedes ser descriptivo.</li>
+<li>En <b>Portfolio de negocio</b> selecciona el que creaste en la fase 01. <b>No lo dejes en blanco</b> — si lo dejas sin asociar, tendrás que rehacer la app.</li>
+<li><span class="path">Crear app</span>. Te pedirá tu contraseña de Facebook.</li>
+</ol>
+</section>
+
+<!-- ============================================ FASE 3 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">03</span><h2>Añadir el producto WhatsApp</h2><span class="time">5 min</span></div>
+
+<ol class="steps">
+<li>En el panel de la app, baja hasta la lista de productos y busca la tarjeta <b>WhatsApp</b> → <span class="path">Configurar</span>.</li>
+<li>Confirma el Portfolio de negocio cuando lo pida.</li>
+<li>Meta crea automáticamente una <b>WhatsApp Business Account (WABA)</b> dentro del portfolio. Es la cuenta que agrupa tus números y plantillas.</li>
+<li>Ya en el menú lateral aparece <span class="path">WhatsApp → Configuración de la API</span>. Ahí vivirás las próximas fases.</li>
+</ol>
+
+<div class="vault">
+<h5>Anota antes de seguir</h5>
+<dl>
+<dt>App ID</dt><dd></dd>
+<dt>WhatsApp Business Account ID</dt><dd></dd>
+</dl>
+</div>
+</section>
+
+<!-- ============================================ FASE 4 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">04</span><h2>Probar con el número de prueba</h2><span class="time">15 min</span></div>
+<p class="lead">Meta regala un número de test. Úsalo: confirma que todo el circuito funciona antes de comprometer tu número real, que es una decisión difícil de revertir.</p>
+
+<ol class="steps">
+<li>En <span class="path">Configuración de la API</span> verás un <b>número de prueba</b> ya asignado con su <b>Phone number ID</b>.</li>
+<li>Abajo, en <b>«Para»</b>, agrega tu propio celular como destinatario de prueba. Recibirás un código por WhatsApp que debes ingresar. Se permiten hasta 5 números de prueba.</li>
+<li>Copia el <b>token temporal</b> que aparece arriba. <b>Dura 24 horas</b> — es solo para esta fase.</li>
+<li>Presiona <span class="path">Enviar mensaje</span>. Debe llegarte a tu celular la plantilla <code>hello_world</code> desde el número de prueba.</li>
+</ol>
+
+<div class="note">
+<b>Si no llega el mensaje</b>, el problema casi siempre es que el número destino no fue verificado con el código del paso 2. Revísalo antes de sospechar del resto.
+</div>
+
+<div class="warn">
+<b>El número de prueba solo escribe a los 5 destinatarios verificados.</b> No sirve para producción ni para demos con clientes.
+</div>
+</section>
+
+<!-- ============================================ FASE 5 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">05</span><h2>Registrar el número real</h2><span class="time">15 min</span></div>
+
+<ol class="steps">
+<li>En <span class="path">Configuración de la API</span> → <span class="path">Agregar número de teléfono</span>.</li>
+<li><b>Nombre para mostrar (display name):</b> es lo que el cliente verá como remitente. Pon <code>Rivas &amp; Asociados</code>. Meta lo revisa contra el negocio real — ver la fase 06.</li>
+<li><b>Categoría del negocio:</b> Servicios profesionales o Legal.</li>
+<li><b>Descripción:</b> una línea sobria. Ej. «Firma de abogados especializada en derecho corporativo y litigios.»</li>
+<li>Ingresa el número <b>con código de país</b> y elige verificación por <b>SMS</b> o <b>llamada</b>. Para línea fija usa llamada.</li>
+<li>Ingresa el código de 6 dígitos. El número queda registrado y aparece en la lista con su propio <b>Phone number ID</b> — distinto al del número de prueba.</li>
+</ol>
+
+<div class="vault">
+<h5>Anota antes de seguir — este es el dato que usará Make</h5>
+<dl>
+<dt>Phone number ID (real)</dt><dd></dd>
+<dt>Número registrado</dt><dd></dd>
+</dl>
+</div>
+
+<div class="warn">
+<b>No instales WhatsApp en ese número después de registrarlo.</b> Si lo haces, se rompe el registro de la API y hay que empezar la fase de nuevo.
+</div>
+</section>
+
+<!-- ============================================ FASE 6 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">06</span><h2>Aprobación del nombre para mostrar</h2><span class="time">Espera: 1 h – 2 días</span></div>
+<p class="lead">Meta revisa que el nombre corresponda a un negocio real. Es asíncrono: puedes seguir con las fases 07 y 08 mientras esperas.</p>
+
+<h3>Qué se aprueba sin problema</h3>
+<p>El nombre legal o la marca comercial de la firma, tal como aparece en el sitio web y en la Cámara de Comercio. <code>Rivas &amp; Asociados</code> cumple.</p>
+
+<h3>Qué se rechaza</h3>
+<table>
+<thead><tr><th>Nombre</th><th>Por qué se rechaza</th></tr></thead>
+<tbody>
+<tr><td>Abogados Bogotá</td><td>Genérico y descriptivo. No identifica un negocio concreto.</td></tr>
+<tr><td>Rivas Ofertas</td><td>Contiene término promocional.</td></tr>
+<tr><td>Info Rivas</td><td>Prefijo funcional; Meta lo lee como no-marca.</td></tr>
+<tr><td>RIVAS &amp; ASOCIADOS</td><td>Todo en mayúsculas. Se rechaza por formato.</td></tr>
+<tr><td>Rivas Test</td><td>Cualquier variante de prueba.</td></tr>
+</tbody>
+</table>
+
+<div class="note">
+<b>Si te lo rechazan</b>, corriges y reenvías desde <span class="path">WhatsApp Manager → Configuración del número → Nombre para mostrar</span>. Cada cambio abre una nueva revisión, y solo puedes cambiarlo un número limitado de veces por mes: acierta al primer intento.
+</div>
+</section>
+
+<!-- ============================================ FASE 7 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">07</span><h2>Generar el token permanente</h2><span class="time">10 min</span></div>
+<p class="lead">El token de 24 h de la fase 04 no sirve para producción: tu automatización dejaría de funcionar cada día. El token permanente se emite a nombre de un «usuario del sistema».</p>
+
+<ol class="steps">
+<li>Ve a <a href="https://business.facebook.com/settings">business.facebook.com/settings</a> → <span class="path">Usuarios</span> → <span class="path">Usuarios del sistema</span>.</li>
+<li><span class="path">Agregar</span> → nombre <code>rivas-api-make</code> → rol <b>Administrador</b>.</li>
+<li>Con el usuario seleccionado: <span class="path">Agregar activos</span> → pestaña <b>Aplicaciones</b> → elige tu app → activa <b>Control total</b>. Guarda.</li>
+<li>Repite <span class="path">Agregar activos</span> → pestaña <b>Cuentas de WhatsApp</b> → elige tu WABA → <b>Control total</b>. Guarda.</li>
+<li><span class="path">Generar nuevo token</span> → selecciona tu app → <b>caducidad: Nunca</b>.</li>
+<li>Marca exactamente estos dos permisos: <code>whatsapp_business_messaging</code> y <code>whatsapp_business_management</code>.</li>
+<li>Copia el token. <b>Se muestra una sola vez.</b> Si lo pierdes, hay que generar otro.</li>
+</ol>
+
+<div class="warn">
+<b>Trata ese token como la contraseña maestra de la cuenta.</b> No lo pegues en un chat, ni en un correo, ni en un archivo del proyecto web. Solo va en el campo de conexión de Make.com. Con ese token cualquiera puede enviar mensajes en nombre de la firma.
+</div>
+
+<div class="note">
+El paso 3 y 4 se saltan mucho y es la causa número uno de que el token «no funcione»: sin los activos asignados, el token es válido pero no tiene permiso sobre tu número.
+</div>
+</section>
+
+<!-- ============================================ FASE 8 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">08</span><h2>Crear y aprobar las plantillas</h2><span class="time">30 min + revisión</span></div>
+<p class="lead">Si el cliente no te escribió primero, <b>solo puedes enviarle plantillas pre-aprobadas</b>. Texto libre devuelve error y el mensaje nunca sale. Tu caso — alguien llena el formulario web — cae siempre aquí.</p>
+
+<h3>Cómo se crean</h3>
+<ol class="steps">
+<li><a href="https://business.facebook.com/wa/manage/message-templates">WhatsApp Manager</a> → <span class="path">Plantillas de mensajes</span> → <span class="path">Crear plantilla</span>.</li>
+<li>Elige <b>categoría</b> (ver tabla), <b>idioma</b> Español, y el <b>nombre</b> en minúsculas con guión bajo: <code>consulta_recibida</code>. <code>Consulta Recibida</code> no es válido.</li>
+<li>Escribe el cuerpo, agrega variables con el botón <span class="path">+ Agregar variable</span>.</li>
+<li><b>Llena el ejemplo de cada variable.</b> Sin ejemplos hay rechazo automático.</li>
+<li><span class="path">Enviar</span>. La revisión tarda entre minutos y 24 horas.</li>
+</ol>
+
+<h3>Elegir la categoría correcta</h3>
+<table>
+<thead><tr><th>Categoría</th><th>Cuándo usarla</th><th>Costo</th></tr></thead>
+<tbody>
+<tr><td>Utility</td><td>Responde a una acción del usuario: confirmar recepción, recordar cita, informar estado de un trámite.</td><td>Bajo</td></tr>
+<tr><td>Marketing</td><td>Promoción, invitación, «conoce nuestros servicios».</td><td>Alto</td></tr>
+<tr><td>Authentication</td><td>Solo códigos de verificación. No aplica.</td><td>—</td></tr>
+</tbody>
+</table>
+
+<div class="warn">
+<b>Meta reclasifica tu plantilla si no está de acuerdo.</b> Error clásico: escribes «Recibimos tu consulta. <i>Conoce también nuestras áreas de práctica en rivasyasociados.com</i>» y esa segunda frase la manda a Marketing, con costo más alto y revisión más estricta. Mantén las confirmaciones limpias, sin invitaciones ni enlaces promocionales.
+</div>
+
+<h3>Reglas de variables que causan rechazo</h3>
+<table>
+<thead><tr><th>Regla</th><th>Mal</th><th>Bien</th></tr></thead>
+<tbody>
+<tr><td>No abrir con variable</td><td><code>{{1}}, recibimos…</code></td><td><code>Hola {{1}}, recibimos…</code></td></tr>
+<tr><td>No cerrar con variable</td><td><code>…tu caso {{2}}</code></td><td><code>…tu caso sobre {{2}} pronto.</code></td></tr>
+<tr><td>No pegar dos variables</td><td><code>{{1}} {{2}}</code></td><td><code>{{1}}, sobre {{2}}</code></td></tr>
+<tr><td>Numeración consecutiva</td><td><code>{{1}}</code> y <code>{{3}}</code></td><td><code>{{1}}</code>, <code>{{2}}</code>, <code>{{3}}</code></td></tr>
+<tr><td>Más texto fijo que variables</td><td><code>Hola {{1}}, {{2}}</code></td><td>Máx. 4–6 variables con texto real alrededor</td></tr>
+</tbody>
+</table>
+
+<h3>Las tres plantillas para la firma</h3>
+
+<div class="tpl">
+<div class="tpl__bar"><b>consulta_recibida</b><span class="tpl__cat">Utility</span></div>
+<div class="tpl__body">
+<div class="bubble">Hola <span class="v">{{1}}</span>, recibimos tu consulta sobre <span class="v">{{2}}</span> en Rivas &amp; Asociados. Uno de nuestros abogados revisará tu caso y te contactará dentro de las próximas 24 horas hábiles.<span class="foot">Mensaje automático · Rivas &amp; Asociados</span></div>
+<dl class="tpl__vars">
+<dt>{{1}}</dt><dd>Andrea Villalobos — nombre completo colombiano, largo realista</dd>
+<dt>{{2}}</dt><dd>Derecho Corporativo — el área que más consultas recibe</dd>
+</dl>
+</div>
+</div>
+
+<div class="tpl">
+<div class="tpl__bar"><b>candidatura_recibida</b><span class="tpl__cat">Utility</span></div>
+<div class="tpl__body">
+<div class="bubble">Hola <span class="v">{{1}}</span>, confirmamos la recepción de tu hoja de vida para el cargo de <span class="v">{{2}}</span>. Nuestro equipo de talento humano la revisará y te contactaremos si tu perfil avanza en el proceso.<span class="foot">Mensaje automático · Rivas &amp; Asociados</span></div>
+<dl class="tpl__vars">
+<dt>{{1}}</dt><dd>Camilo Restrepo</dd>
+<dt>{{2}}</dt><dd>Abogado Junior de Litigios — cargo con formato real, no «abogado» suelto</dd>
+</dl>
+</div>
+</div>
+
+<div class="tpl">
+<div class="tpl__bar"><b>recordatorio_cita</b><span class="tpl__cat">Utility</span><span style="font-size:7.5pt;letter-spacing:.1em;text-transform:uppercase;opacity:.7">con botones</span></div>
+<div class="tpl__body">
+<div class="bubble">Hola <span class="v">{{1}}</span>, te recordamos tu cita con <span class="v">{{2}}</span> el <span class="v">{{3}}</span> a las <span class="v">{{4}}</span> en nuestra oficina de la Calle 146 # 7-64, Oficina 403.<span class="foot">Botones: Confirmar asistencia · Necesito reprogramar</span></div>
+<dl class="tpl__vars">
+<dt>{{1}}</dt><dd>Sofía Márquez</dd>
+<dt>{{2}}</dt><dd>Dr. Carlos Rivas</dd>
+<dt>{{3}}</dt><dd>martes 15 de septiembre — mes en palabras: <code>15/09</code> es ambiguo y juega en contra</dd>
+<dt>{{4}}</dt><dd>10:30 a.m. — con a.m./p.m., <code>10:30</code> no dice si es mañana o noche</dd>
+</dl>
+</div>
+</div>
+
+<div class="note">
+<b>Los botones de respuesta rápida hacen algo muy útil:</b> cuando el cliente toca uno, se abre la ventana de 24 horas y ya puedes escribirle texto libre sin plantilla y sin costo.
+</div>
+
+<h3>Reglas propias de una firma legal</h3>
+<ul class="check">
+<li><b>Nunca prometas resultados.</b> «Ganaremos tu caso» o «garantizamos» → rechazo casi seguro, y además es falta ética.</li>
+<li><b>Nunca uses datos de un cliente real</b> en los ejemplos. Meta los almacena indefinidamente asociados a tu cuenta. Inventa los nombres.</li>
+<li><b>Si te rechazan, corrige y reenvía la misma plantilla</b> — no crees una nueva con otro nombre. Meta penaliza cuentas que acumulan rechazos.</li>
+<li><b>Una plantilla aprobada no se edita libremente:</b> hay un límite de ediciones al mes y cada edición vuelve a revisión.</li>
+</ul>
+</section>
+
+<!-- ============================================ FASE 9 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">09</span><h2>Conectarlo en Make.com</h2><span class="time">20 min</span></div>
+<p class="lead">Aquí se une todo. Los formularios de la web ya envían al webhook de Make; solo hay que agregar un módulo al final del escenario.</p>
+
+<ol class="steps">
+<li>Abre el escenario de Make que recibe el formulario de contacto.</li>
+<li>Al final de la cadena: <span class="path">+</span> → busca <b>WhatsApp Business Cloud</b> → acción <b>Send a Message</b>.</li>
+<li><b>Crear conexión:</b> pega el <b>token permanente</b> de la fase 07. Make lo guarda cifrado de su lado — nunca llega al navegador del visitante.</li>
+<li><b>Phone Number ID:</b> el de la fase 05, el del número real.</li>
+<li><b>Message Type:</b> <code>Template</code>.</li>
+<li><b>Template Name:</b> <code>consulta_recibida</code>. <b>Language:</b> <code>es</code>.</li>
+<li>Aparecen los campos de <code>{{1}}</code> y <code>{{2}}</code>. Arrastra los datos del formulario: <code>{{1}}</code> ← nombre, <code>{{2}}</code> ← área de práctica.</li>
+<li><b>To:</b> el teléfono del formulario, con código de país y sin signos.</li>
+</ol>
+
+<div class="warn">
+<b>El formato del teléfono rompe más integraciones que cualquier otra cosa.</b> Debe ir <code>573001234567</code>. No sirve <code>+57 300 123 4567</code>, ni <code>300 123 4567</code>, ni con guiones. Si el formulario no fuerza el formato, agrega en Make un módulo de texto que limpie espacios, guiones y el <code>+</code>, y que anteponga <code>57</code> si el número llega con 10 dígitos.
+</div>
+
+<div class="note">
+<b>Un módulo por cada plantilla.</b> El formulario de contacto dispara <code>consulta_recibida</code>; el de «Trabaja con nosotros» dispara <code>candidatura_recibida</code> en su propio escenario.
+</div>
+</section>
+
+<!-- ============================================ FASE 10 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">10</span><h2>Probar de punta a punta</h2><span class="time">15 min</span></div>
+
+<ol class="steps">
+<li>En Make activa <span class="path">Run once</span> para dejar el escenario escuchando.</li>
+<li>Abre la web y <b>llena el formulario de contacto de verdad</b>, con tu propio número en el campo de teléfono.</li>
+<li>Verifica que el mensaje te llega a WhatsApp, con el nombre del remitente correcto y las variables bien puestas — no <code>{{1}}</code> literal ni vacías.</li>
+<li>Revisa el historial de ejecución en Make. Si el módulo salió verde pero no llegó nada, el problema está en el formato del teléfono.</li>
+<li>Repite con el formulario de candidatura.</li>
+<li>Cuando ambos funcionen: <span class="path">Scheduling: ON</span> para dejar los escenarios activos permanentemente.</li>
+</ol>
+
+<div class="note">
+<b>Al probar, varía los datos.</b> Los ejemplos de la fase 08 eran para la revisión de Meta. Si envías siempre el mismo nombre repetido, WhatsApp puede leerlo como comportamiento automatizado sospechoso.
+</div>
+</section>
+
+<!-- ============================================ FASE 11 -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">11</span><h2>Límites, verificación y costos</h2><span class="time">Continuo</span></div>
+
+<h3>Límite de mensajería — sube solo</h3>
+<p>Empiezas en <b>250 clientes únicos cada 24 h</b>. El límite sube automáticamente a 1.000, 10.000 y 100.000 conforme envías con buena calidad. Para una firma legal, 250 sobra de largo.</p>
+
+<h3>Calificación de calidad</h3>
+<p>En WhatsApp Manager cada número tiene un semáforo. Si muchos destinatarios bloquean o reportan tus mensajes, baja a amarillo y luego rojo — en rojo se suspende el envío. Enviar solo confirmaciones que el usuario pidió mantiene el verde sin esfuerzo.</p>
+
+<h3>Verificación del negocio</h3>
+<p>Se puede operar sin verificar. La verificación (subir Cámara de Comercio o RUT en <span class="path">Configuración del negocio → Centro de seguridad</span>) hace falta para pasar de los límites altos y para el badge de cuenta oficial. Puede esperar.</p>
+
+<h3>Costos en Colombia</h3>
+<table>
+<thead><tr><th>Concepto</th><th>Costo aproximado</th></tr></thead>
+<tbody>
+<tr><td>Primeras 1.000 conversaciones/mes</td><td>Gratis</td></tr>
+<tr><td>Conversación de servicio (Utility)</td><td>~USD 0,02 c/u</td></tr>
+<tr><td>Conversación de marketing</td><td>Notablemente mayor</td></tr>
+<tr><td>Respuestas dentro de la ventana de 24 h</td><td>Gratis</td></tr>
+</tbody>
+</table>
+<div class="note">Las tarifas de Meta cambian. Confirma en la documentación oficial de precios antes de proyectar el gasto.</div>
+</section>
+
+<!-- ============================================ TROUBLESHOOTING -->
+<section class="phase" style="break-before:page">
+<div class="phase__head"><span class="phase__n">↯</span><h2>Errores frecuentes</h2></div>
+
+<table>
+<thead><tr><th>Síntoma</th><th>Causa</th><th>Solución</th></tr></thead>
+<tbody>
+<tr><td>Error 131030</td><td>Destinatario no está en la lista de prueba</td><td>Estás usando el número de prueba. Pasa al número real (fase 05).</td></tr>
+<tr><td>Error 132000</td><td>Número de variables no coincide con la plantilla</td><td>Revisa que Make mande exactamente las variables que la plantilla declara.</td></tr>
+<tr><td>Error 132001</td><td>Plantilla no existe o no está aprobada</td><td>Verifica nombre exacto e idioma <code>es</code>. Revisa que diga «Activa» en WhatsApp Manager.</td></tr>
+<tr><td>Error 133010</td><td>Número no registrado en la API</td><td>Falta completar el registro de la fase 05.</td></tr>
+<tr><td>Error 190</td><td>Token expirado o inválido</td><td>Estás usando el token de 24 h. Genera el permanente (fase 07).</td></tr>
+<tr><td>Token válido, sin permisos</td><td>Activos no asignados al usuario del sistema</td><td>Fase 07, pasos 3 y 4: asigna la app y la WABA con control total.</td></tr>
+<tr><td>Make sale verde, no llega nada</td><td>Formato del teléfono</td><td>Debe ser <code>573001234567</code>, sin <code>+</code>, sin espacios, sin guiones.</td></tr>
+<tr><td>Llega <code>{{1}}</code> literal</td><td>Variables sin mapear en Make</td><td>Arrastra los campos del formulario a cada variable del módulo.</td></tr>
+<tr><td>Plantilla rechazada sin motivo claro</td><td>Ejemplos vacíos o tipo <code>test</code></td><td>Pon ejemplos realistas y reenvía la misma plantilla.</td></tr>
+<tr><td>Reclasificada a Marketing</td><td>El texto invita o promociona</td><td>Quita enlaces e invitaciones. Deja solo la confirmación.</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============================================ RESUMEN -->
+<section class="phase">
+<div class="phase__head"><span class="phase__n">✦</span><h2>Datos a custodiar</h2></div>
+<p class="lead">Al terminar tendrás cinco datos. Guárdalos en el gestor de contraseñas de la firma, no en un archivo suelto.</p>
+<div class="vault" style="margin-left:0">
+<h5>Credenciales de producción</h5>
+<dl>
+<dt>App ID</dt><dd></dd>
+<dt>WhatsApp Business Account ID</dt><dd></dd>
+<dt>Phone number ID (real)</dt><dd></dd>
+<dt>Token permanente</dt><dd>— gestor de contraseñas —</dd>
+<dt>Usuario del sistema</dt><dd>rivas-api-make</dd>
+</dl>
+</div>
+<div class="warn" style="margin-left:0">
+<b>El token permanente no caduca.</b> Eso lo hace cómodo y peligroso a la vez. Si un empleado con acceso sale de la firma, revócalo desde <span class="path">Configuración del negocio → Usuarios del sistema</span> y genera uno nuevo. Toma dos minutos y evita que tu número siga enviando mensajes desde donde no debe.
+</div>
+</section>
+
+</doc-page>
+<script src="doc-page.js"></script>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0F2424"/><circle cx="50" cy="50" r="22" fill="none" stroke="#A87C42" stroke-width="3"/><path d="M43 43c-1 0-2 1-2 3 0 5 5 11 11 13 2 1 4 0 4-2 0-1-2-2-3-3-1 0-1 1-2 1-2-1-5-4-6-6 0-1 1-1 1-2 0-1-1-3-1-4z" fill="#A87C42"/></svg>
+</template>
+</body>
+</html>
