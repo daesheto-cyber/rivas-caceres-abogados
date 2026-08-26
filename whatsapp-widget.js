@@ -3,7 +3,7 @@
 
   /* ── Configuración ─────────────────────────────────────────────── */
   var CONFIG = {
-    phone:          '573004830722',
+    phone:          '573001034718',
     businessName:   'Rivas Cáceres Abogados',
     avatarInitials: 'RC',
     welcomeMessage: '¡Hola! 👋 ¿En qué podemos ayudarte hoy? Cuéntanos tu caso y con gusto te orientamos.',

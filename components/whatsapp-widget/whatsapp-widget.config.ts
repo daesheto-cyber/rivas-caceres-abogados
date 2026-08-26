@@ -1,5 +1,5 @@
 export interface WhatsAppWidgetConfig {
-  /** Número en formato internacional sin espacios ni símbolos, ej. "573004830722" */
+  /** Número en formato internacional sin espacios ni símbolos, ej. "573001034718" */
   phone: string;
   businessName: string;
   /** URL de la foto de perfil. Si se omite se muestran las iniciales. */
@@ -17,7 +17,7 @@ export interface WhatsAppWidgetConfig {
 }
 
 const config: WhatsAppWidgetConfig = {
-  phone: '573004830722',
+  phone: '573001034718',
   businessName: 'Rivas Cáceres Abogados',
   avatarInitials: 'RC',
   welcomeMessage:
